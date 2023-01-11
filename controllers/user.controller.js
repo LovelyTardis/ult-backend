@@ -1,7 +1,9 @@
 import { request, response } from "express";
 
 import { User } from "../models/index.js";
-import { passwordHash, passwordVerify } from "../helpers/passwordHash.js";
+
+import { passwordHash } from "../helpers/index.js";
+import { Create } from "../database/helpers/index.js";
 
 export const getUser = async (req = request, res = response) => {
   const { user } = req;
@@ -23,20 +25,19 @@ export const getUser = async (req = request, res = response) => {
 export const createUser = async (req = request, res = response) => {
   const { email, password, name, username, profilePicture = "" } = req.body;
 
-  // hash password using bcryptjs
   const hashedPassword = passwordHash(password);
 
   // profilePicture must be given as a string from the front-end
 
-  const newUser = new User({
+  const dataToSave = {
     email,
     password: hashedPassword,
     name,
     username,
     profilePicture,
-  });
+  };
 
-  const created = await newUser.save();
+  const created = await Create(User, dataToSave);
 
   res.status(201).json({
     code: 201,
