@@ -1,2 +1,2 @@
-export { default as validateFields } from "./validateFields.js";
-export { default as validateUsername } from "./validateUsername.js";
+export * from "./validateFields.js";
+export * from "./validateUsername.js";

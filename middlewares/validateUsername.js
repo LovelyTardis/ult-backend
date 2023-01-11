@@ -1,7 +1,7 @@
 import { FindOne } from "../database/helpers/index.js";
 import { User } from "../models/index.js";
 
-const validateUsername = async (req, res, next) => {
+export const validateUsername = async (req, res, next) => {
   const { username } = req.params;
 
   try {
@@ -25,5 +25,3 @@ const validateUsername = async (req, res, next) => {
     });
   }
 };
-
-export default validateUsername;

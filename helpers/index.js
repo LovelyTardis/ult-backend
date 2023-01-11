@@ -1,1 +1,1 @@
-export { passwordHash, passwordVerify } from "./passwordHash.js";
+export * from "./passwordHash.js";
