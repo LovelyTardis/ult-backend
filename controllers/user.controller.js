@@ -37,13 +37,34 @@ export const createUser = async (req = request, res = response) => {
     profilePicture,
   };
 
-  const created = await Create(User, dataToSave);
+  try {
+    const created = await Create(User, dataToSave);
 
-  res.status(201).json({
-    code: 201,
-    error: false,
-    data: created,
-  });
+    const { _id, name, username, profilePicture, email, ults, likedUlts } =
+      created;
+
+    const logged = {
+      uid: _id,
+      name,
+      username,
+      profilePicture,
+      email,
+      ults,
+      likedUlts,
+    };
+
+    res.status(201).json({
+      code: 201,
+      error: false,
+      data: logged,
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      error: false,
+      data: error,
+    });
+  }
 };
 
 export const loginUser = async (req = request, res = response) => {
