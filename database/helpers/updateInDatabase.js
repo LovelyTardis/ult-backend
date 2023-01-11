@@ -16,3 +16,14 @@ export const Update = async (Model, data) => {
     ? await Model.findByIdAndUpdate(id, updatedData).populate(...populate)
     : await Model.findByIdAndUpdate(id, updatedData);
 };
+
+/**
+ * Pushes an ult to the user ults.
+ *
+ * @param {model} Model mongoose model.
+ * @param {object} data {id: String, ultId: String}
+ */
+export const PushUltToUser = async (Model, data) => {
+  const { id, ultId } = data;
+  await Model.updateOne({ _id: id }, { $push: { ults: ultId } });
+};
