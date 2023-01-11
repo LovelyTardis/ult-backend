@@ -5,7 +5,11 @@ import { check } from "express-validator";
 import { getUser, createUser, loginUser } from "../controllers/index.js";
 
 // MIDDLEWARES
-import { validateFields, validateUsername } from "../middlewares/index.js";
+import {
+  validateFields,
+  validateUsername,
+  validateLoginCredentials,
+} from "../middlewares/index.js";
 import {
   checkEmailExists,
   checkUsernameExists,
@@ -29,7 +33,7 @@ const middlewares = {
     }),
     validateFields,
   ],
-  login: [validateFields],
+  login: [validateLoginCredentials, validateFields],
 };
 
 userRoutes.get("/:username", middlewares.getUser, getUser);

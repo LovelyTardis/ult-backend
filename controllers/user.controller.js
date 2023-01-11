@@ -2,7 +2,7 @@ import { request, response } from "express";
 
 import { User } from "../models/index.js";
 
-import { passwordHash } from "../helpers/index.js";
+import { passwordHash, passwordVerify } from "../helpers/index.js";
 import { Create } from "../database/helpers/index.js";
 
 export const getUser = async (req = request, res = response) => {
@@ -46,10 +46,40 @@ export const createUser = async (req = request, res = response) => {
   });
 };
 
-export const loginUser = async () => {
-  res.status(501).json({
-    code: 501,
+export const loginUser = async (req = request, res = response) => {
+  const { password } = req.body;
+  const {
+    name,
+    username,
+    profilePicture,
+    email,
+    password: hashedPassword,
+    ults,
+    likedUlts,
+  } = req.user;
+
+  const verified = passwordVerify(password, hashedPassword);
+
+  if (!verified)
+    return res.status(404).json({
+      code: 404,
+      error: true,
+      data: "Not found - email, username or password wrong",
+    });
+
+  const logged = {
+    uid: req.user._id,
+    name,
+    username,
+    profilePicture,
+    email,
+    ults,
+    likedUlts,
+  };
+
+  res.json({
+    code: 200,
     error: true,
-    data: "Not implemented - login user",
+    data: logged,
   });
 };
