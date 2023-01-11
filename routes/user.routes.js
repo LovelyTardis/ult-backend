@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { getUser, createUser } from "../controllers/index.js";
+// CONTROLLERS
+import { getUser, createUser, loginUser } from "../controllers/index.js";
 
+// MIDDLEWARES
 import { validateFields, validateUsername } from "../middlewares/index.js";
 import {
   checkEmailExists,
@@ -10,7 +12,6 @@ import {
 } from "../middlewares/database/index.js";
 
 const userRoutes = Router();
-
 const middlewares = {
   getUser: [check("username").notEmpty(), validateUsername, validateFields],
   create: [
@@ -28,9 +29,12 @@ const middlewares = {
     }),
     validateFields,
   ],
+  login: [validateFields],
 };
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
 userRoutes.post("/", middlewares.create, createUser);
+// TODO: login
+userRoutes.post("/login", middlewares.login, loginUser);
 
 export default userRoutes;

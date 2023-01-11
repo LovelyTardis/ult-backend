@@ -45,3 +45,11 @@ export const createUser = async (req = request, res = response) => {
     data: created,
   });
 };
+
+export const loginUser = async () => {
+  res.status(501).json({
+    code: 501,
+    error: true,
+    data: "Not implemented - login user",
+  });
+};
