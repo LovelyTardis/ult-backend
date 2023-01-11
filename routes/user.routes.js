@@ -38,7 +38,6 @@ const middlewares = {
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
 userRoutes.post("/", middlewares.create, createUser);
-// TODO: login
 userRoutes.post("/login", middlewares.login, loginUser);
 
 export default userRoutes;
