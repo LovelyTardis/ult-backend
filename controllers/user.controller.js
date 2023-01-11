@@ -4,7 +4,20 @@ import { User } from "../models/index.js";
 import { passwordHash, passwordVerify } from "../helpers/passwordHash.js";
 
 export const getUser = async (req = request, res = response) => {
-  return res.status(501).json({ error: true, data: "Not implemented" });
+  const { user } = req;
+
+  return res.json({
+    code: 200,
+    error: false,
+    data: {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      ults: user.ults,
+      likedUlts: user.likedUlts,
+    },
+  });
 };
 
 export const createUser = async (req = request, res = response) => {
@@ -26,6 +39,7 @@ export const createUser = async (req = request, res = response) => {
   const created = await newUser.save();
 
   res.status(201).json({
+    code: 201,
     error: false,
     data: created,
   });
