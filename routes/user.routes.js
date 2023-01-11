@@ -4,6 +4,7 @@ import { check } from "express-validator";
 import { getUser, createUser } from "../controllers/index.js";
 
 import { validateFields } from "../middlewares/index.js";
+import { checkEmailExists } from "../middlewares/database/index.js";
 
 const userRoutes = Router();
 
@@ -16,10 +17,11 @@ const middlewares = {
   create: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
-    // check if the email exists in the database
+    check("email").custom(checkEmailExists),
     check("name", "Bad request - no name in body").notEmpty(),
     check("username", "Bad request - no username in body").notEmpty(),
     // check if the username exists in the database
+    // check("username").custom(),
     check(
       "password",
       "Bad request - password must have 6 or more characters"
