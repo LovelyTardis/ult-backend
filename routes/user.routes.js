@@ -3,7 +3,7 @@ import { check } from "express-validator";
 
 import { getUser, createUser } from "../controllers/index.js";
 
-import { validateFields } from "../middlewares/index.js";
+import { validateFields, validateUsername } from "../middlewares/index.js";
 import {
   checkEmailExists,
   checkUsernameExists,
@@ -12,11 +12,7 @@ import {
 const userRoutes = Router();
 
 const middlewares = {
-  getUser: [
-    check("username").notEmpty(),
-    // check("username").custom(),
-    validateFields,
-  ],
+  getUser: [check("username").notEmpty(), validateUsername, validateFields],
   create: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
@@ -35,6 +31,6 @@ const middlewares = {
 };
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
-userRoutes.post("/create", middlewares.create, createUser);
+userRoutes.post("/", middlewares.create, createUser);
 
 export default userRoutes;
