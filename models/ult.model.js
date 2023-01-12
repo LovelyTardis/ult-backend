@@ -6,8 +6,8 @@ const UltSchema = Schema({
     required: [true, "Message is required"],
   },
   datetime: {
-    type: String,
-    default: Date.now(),
+    type: Number,
+    required: [true, "Datetime is required"],
   },
   user: {
     type: Schema.Types.ObjectId,
