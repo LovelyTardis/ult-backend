@@ -4,10 +4,10 @@ import { Ult, User } from "../models/index.js";
 import { Create, PushUltToUser } from "../database/helpers/index.js";
 
 export const getUlt = async (req = request, res = response) => {
-  res.status(501).json({
-    code: 501,
-    error: true,
-    data: "Not implemented",
+  return res.json({
+    code: 200,
+    error: false,
+    data: req.ult,
   });
 };
 
