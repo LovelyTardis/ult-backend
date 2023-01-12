@@ -5,7 +5,11 @@ export const validateUsername = async (req, res, next) => {
   const { username } = req.params;
 
   try {
-    const found = await FindOne(User, { filter: { username } });
+    const found = await FindOne(User, {
+      filter: { username },
+      populate: ["ults"],
+      populate2: ["likedUlts"],
+    });
 
     if (!found)
       return res.status(404).json({
