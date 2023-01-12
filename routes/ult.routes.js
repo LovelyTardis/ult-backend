@@ -5,12 +5,20 @@ import { check } from "express-validator";
 import { getUlt, createUlt } from "../controllers/index.js";
 
 // MIDDLEWARES
-import { validateFields } from "../middlewares/index.js";
+import {
+  validateFields,
+  validateUlt,
+} from "../middlewares/validators/index.js";
 
 const ultRoutes = Router();
 
 const middlewares = {
-  getUlt: [validateFields],
+  getUlt: [
+    check("ult", "Bad request - ult is required").notEmpty(),
+    check("ult", "Bad request - not a Mongo Id").isMongoId(),
+    validateUlt,
+    validateFields,
+  ],
   create: [
     check("user").isMongoId(),
     check("message", "Message is required").notEmpty(),

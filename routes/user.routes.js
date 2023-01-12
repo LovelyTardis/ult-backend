@@ -9,11 +9,11 @@ import {
   validateFields,
   validateUsername,
   validateLoginCredentials,
-} from "../middlewares/index.js";
+} from "../middlewares/validators/index.js";
 import {
   checkEmailExists,
   checkUsernameExists,
-} from "../middlewares/database/index.js";
+} from "../middlewares/checkers/index.js";
 
 const userRoutes = Router();
 const middlewares = {
