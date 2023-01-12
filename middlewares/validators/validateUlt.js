@@ -7,14 +7,21 @@ export const validateUlt = async (req, res, next) => {
   try {
     const found = await FindById(Ult, { id: ult, populate: ["user"] });
 
-    console.log(found);
-
     if (!found)
       return res.status(404).json({
         code: 404,
         error: true,
         data: "Not found - ult",
       });
+
+    const { _id, name, username, profilePicture } = found.user;
+
+    found.user = {
+      _id,
+      name,
+      username,
+      profilePicture,
+    };
 
     req.ult = found;
 
