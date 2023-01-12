@@ -1,5 +1,5 @@
-import { FindOne } from "../database/helpers/index.js";
-import { User } from "../models/index.js";
+import { FindOne } from "../../database/helpers/index.js";
+import { User } from "../../models/index.js";
 
 export const validateUsername = async (req, res, next) => {
   const { username } = req.params;
