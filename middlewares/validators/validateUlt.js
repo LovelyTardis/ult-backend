@@ -5,7 +5,11 @@ export const validateUlt = async (req, res, next) => {
   const { ult } = req.params;
 
   try {
-    const found = await FindById(UltModel, { id: ult, populate: ["user"] });
+    const found = await FindById(UltModel, {
+      id: ult,
+      populate: ["user"],
+      populate2: ["comments"],
+    });
 
     if (!found)
       return res.status(404).json({
