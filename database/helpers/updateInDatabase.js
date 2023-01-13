@@ -18,12 +18,12 @@ export const Update = async (Model, data) => {
 };
 
 /**
- * Pushes an ult to the user ults.
+ * Pushes something into an array.
  *
  * @param {model} Model mongoose model.
- * @param {object} data {id: String, ultId: String}
+ * @param {String} idToUpdate mongoId to update
+ * @param {object} dataToPush data to be pushed in the array
  */
-export const PushUltToUser = async (Model, data) => {
-  const { id, ultId } = data;
-  await Model.updateOne({ _id: id }, { $push: { ults: ultId } });
+export const PushToArray = async (Model, idToUpdate, dataToPush) => {
+  await Model.updateOne({ _id: idToUpdate }, { $push: dataToPush });
 };
