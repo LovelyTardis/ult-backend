@@ -24,9 +24,11 @@ export const createUlt = async (req = request, res = response) => {
   try {
     const created = await Create(UltModel, dataToSave);
 
-    const dataToPush = { ults: created };
+    // Ult is created by User
+    await PushToArray(UserModel, user, { ults: created });
 
-    await PushToArray(UserModel, user, dataToPush);
+    // Ult could be added as a comment for other Ult
+    if (ult) await PushToArray(UltModel, ult, { comments: created });
 
     res.status(201).json({
       code: 201,
