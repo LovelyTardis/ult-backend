@@ -4,13 +4,13 @@ import { UserModel } from "../models/index.js";
 
 import { passwordHash, passwordVerify } from "../helpers/index.js";
 import { Create } from "../database/helpers/index.js";
+import { customError } from "../utils/customError.js";
 
 export const getUser = async (req = request, res = response) => {
   const { user } = req;
 
   return res.json({
     code: 200,
-    error: false,
     data: {
       name: user.name,
       username: user.username,
@@ -22,7 +22,7 @@ export const getUser = async (req = request, res = response) => {
   });
 };
 
-export const createUser = async (req = request, res = response) => {
+export const createUser = async (req = request, res = response, next) => {
   const { email, password, name, username, profilePicture = "" } = req.body;
 
   const hashedPassword = passwordHash(password);
@@ -54,19 +54,14 @@ export const createUser = async (req = request, res = response) => {
 
     res.status(201).json({
       code: 201,
-      error: false,
       data: logged,
     });
-  } catch (error) {
-    res.status(500).json({
-      code: 500,
-      error: false,
-      data: error,
-    });
+  } catch (err) {
+    next(customError(err));
   }
 };
 
-export const loginUser = async (req = request, res = response) => {
+export const loginUser = async (req = request, res = response, next) => {
   const { password } = req.body;
   const {
     name,
@@ -81,11 +76,9 @@ export const loginUser = async (req = request, res = response) => {
   const verified = passwordVerify(password, hashedPassword);
 
   if (!verified)
-    return res.status(404).json({
-      code: 404,
-      error: true,
-      data: "Not found - email, username or password wrong",
-    });
+    return next(
+      customError("Not found - email, username or password wrong", 404)
+    );
 
   const logged = {
     uid: req.user._id,

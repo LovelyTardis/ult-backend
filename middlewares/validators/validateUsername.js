@@ -1,5 +1,6 @@
 import { FindOne } from "../../database/helpers/index.js";
 import { UserModel } from "../../models/index.js";
+import { customError } from "../../utils/customError.js";
 
 export const validateUsername = async (req, res, next) => {
   const { username } = req.params;
@@ -11,21 +12,14 @@ export const validateUsername = async (req, res, next) => {
       populate2: ["likedUlts"],
     });
 
-    if (!found)
-      return res.status(404).json({
-        code: 404,
-        error: true,
-        data: "Not found - username",
-      });
+    if (!found) {
+      return next(customError("Not found - username", 404));
+    }
 
     req.user = found;
 
     next();
-  } catch (error) {
-    return res.status(500).json({
-      code: 500,
-      error: true,
-      data: error,
-    });
+  } catch (err) {
+    return next(customError(err));
   }
 };

@@ -1,5 +1,6 @@
 import { FindById } from "../../database/helpers/index.js";
 import { UltModel } from "../../models/index.js";
+import { customError } from "../../utils/customError.js";
 
 export const validateUlt = async (req, res, next) => {
   const { ult } = req.params;
@@ -11,12 +12,7 @@ export const validateUlt = async (req, res, next) => {
       populate2: ["comments"],
     });
 
-    if (!found)
-      return res.status(404).json({
-        code: 404,
-        error: true,
-        data: "Not found - ult",
-      });
+    if (!found) return next(customError("Not found - ult", 404));
 
     const { _id, name, username, profilePicture } = found.user;
 
@@ -30,11 +26,7 @@ export const validateUlt = async (req, res, next) => {
     req.ult = found;
 
     next();
-  } catch (error) {
-    return res.status(500).json({
-      code: 500,
-      error: true,
-      data: error,
-    });
+  } catch (err) {
+    return next(customError(err));
   }
 };
