@@ -1,5 +1,5 @@
 import { FindOne } from "../../database/helpers/index.js";
-import { User } from "../../models/index.js";
+import { UserModel } from "../../models/index.js";
 
 export const validateLoginCredentials = async (req, res, next) => {
   const { email, username = "", password } = req.body;
@@ -14,8 +14,8 @@ export const validateLoginCredentials = async (req, res, next) => {
 
   try {
     found = email
-      ? await FindOne(User, { filter: { email } })
-      : await FindOne(User, { filter: { username } });
+      ? await FindOne(UserModel, { filter: { email } })
+      : await FindOne(UserModel, { filter: { username } });
 
     if (!found)
       return res.status(404).json({

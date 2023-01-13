@@ -1,6 +1,6 @@
 import { request, response } from "express";
 
-import { User } from "../models/index.js";
+import { UserModel } from "../models/index.js";
 
 import { passwordHash, passwordVerify } from "../helpers/index.js";
 import { Create } from "../database/helpers/index.js";
@@ -28,7 +28,6 @@ export const createUser = async (req = request, res = response) => {
   const hashedPassword = passwordHash(password);
 
   // profilePicture must be given as a string from the front-end
-
   const dataToSave = {
     email,
     password: hashedPassword,
@@ -38,7 +37,7 @@ export const createUser = async (req = request, res = response) => {
   };
 
   try {
-    const created = await Create(User, dataToSave);
+    const created = await Create(UserModel, dataToSave);
 
     const { _id, name, username, profilePicture, email, ults, likedUlts } =
       created;

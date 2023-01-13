@@ -1,11 +1,11 @@
 import { FindOne } from "../../database/helpers/index.js";
-import { User } from "../../models/index.js";
+import { UserModel } from "../../models/index.js";
 
 export const validateUsername = async (req, res, next) => {
   const { username } = req.params;
 
   try {
-    const found = await FindOne(User, {
+    const found = await FindOne(UserModel, {
       filter: { username },
       populate: ["ults"],
       populate2: ["likedUlts"],

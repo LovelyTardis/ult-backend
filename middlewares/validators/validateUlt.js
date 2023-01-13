@@ -1,11 +1,11 @@
 import { FindById } from "../../database/helpers/index.js";
-import { Ult } from "../../models/index.js";
+import { UltModel } from "../../models/index.js";
 
 export const validateUlt = async (req, res, next) => {
   const { ult } = req.params;
 
   try {
-    const found = await FindById(Ult, { id: ult, populate: ["user"] });
+    const found = await FindById(UltModel, { id: ult, populate: ["user"] });
 
     if (!found)
       return res.status(404).json({

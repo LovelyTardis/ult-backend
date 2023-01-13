@@ -1,7 +1,7 @@
 import { request, response } from "express";
 
-import { Ult, User } from "../models/index.js";
-import { Create, PushUltToUser } from "../database/helpers/index.js";
+import { UltModel, UserModel } from "../models/index.js";
+import { Create, PushToArray } from "../database/helpers/index.js";
 
 export const getUlt = async (req = request, res = response) => {
   return res.json({
@@ -15,18 +15,18 @@ export const createUlt = async (req = request, res = response) => {
   const { user, message, ult = null } = req.body;
 
   const dataToSave = {
-    user,
+    user: user,
     message,
     datetime: Date.now(),
     ult,
   };
 
   try {
-    const created = await Create(Ult, dataToSave);
+    const created = await Create(UltModel, dataToSave);
 
-    const { _id: ultId } = created;
+    const dataToPush = { ults: created };
 
-    await PushUltToUser(User, { id: user, ultId });
+    await PushToArray(UserModel, user, dataToPush);
 
     res.status(201).json({
       code: 201,
