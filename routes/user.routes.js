@@ -14,6 +14,7 @@ import {
   checkEmailExists,
   checkUsernameExists,
 } from "../middlewares/checkers/index.js";
+import { generalError } from "../middlewares/errors.js";
 
 const userRoutes = Router();
 const middlewares = {
@@ -39,5 +40,6 @@ const middlewares = {
 userRoutes.get("/:username", middlewares.getUser, getUser);
 userRoutes.post("/", middlewares.create, createUser);
 userRoutes.post("/login", middlewares.login, loginUser);
+userRoutes.use(generalError);
 
 export default userRoutes;

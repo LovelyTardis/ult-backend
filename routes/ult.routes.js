@@ -9,6 +9,7 @@ import {
   validateFields,
   validateUlt,
 } from "../middlewares/validators/index.js";
+import { generalError } from "../middlewares/errors.js";
 
 const ultRoutes = Router();
 
@@ -29,5 +30,6 @@ const middlewares = {
 
 ultRoutes.get("/:ult", middlewares.getUlt, getUlt);
 ultRoutes.post("/", middlewares.create, createUlt);
+ultRoutes.use(generalError);
 
 export default ultRoutes;
