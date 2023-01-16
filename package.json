@@ -1,6 +1,6 @@
 {
-  "name": "lovely_server",
-  "version": "0.0.1",
+  "name": "ult-backend",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
