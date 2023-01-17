@@ -7,6 +7,7 @@ import { getUser, createUser, loginUser } from "../controllers/index.js";
 // MIDDLEWARES
 import {
   validateFields,
+  validateUserId,
   validateUsername,
   validateLoginCredentials,
 } from "../middlewares/validators/index.js";
@@ -19,6 +20,7 @@ import { generalError } from "../middlewares/errors.js";
 const userRoutes = Router();
 const middlewares = {
   getUser: [check("username").notEmpty(), validateUsername, validateFields],
+  getUserById: [check("id").isMongoId(), validateUserId, validateFields],
   create: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
@@ -38,6 +40,7 @@ const middlewares = {
 };
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
+userRoutes.get("/id/:id", middlewares.getUserById, getUser);
 userRoutes.post("/", middlewares.create, createUser);
 userRoutes.post("/login", middlewares.login, loginUser);
 userRoutes.use(generalError);
