@@ -8,6 +8,7 @@ import { getUlt, createUlt } from "../controllers/index.js";
 import {
   validateFields,
   validateUlt,
+  validateJwt,
 } from "../middlewares/validators/index.js";
 import { generalError } from "../middlewares/errors.js";
 
@@ -21,6 +22,7 @@ const middlewares = {
     validateFields,
   ],
   create: [
+    validateJwt,
     check("user").isMongoId(),
     check("message", "Message is required").notEmpty(),
     validateFields,
