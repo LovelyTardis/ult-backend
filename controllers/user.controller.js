@@ -2,7 +2,7 @@ import { request, response } from "express";
 
 import { UserModel } from "../models/index.js";
 
-import { passwordHash, passwordVerify } from "../helpers/index.js";
+import { passwordHash, passwordVerify, generateJwt } from "../helpers/index.js";
 import { Create } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
@@ -64,6 +64,7 @@ export const createUser = async (req = request, res = response, next) => {
 export const loginUser = async (req = request, res = response, next) => {
   const { password } = req.body;
   const {
+    _id: uid,
     name,
     username,
     profilePicture,
@@ -80,8 +81,11 @@ export const loginUser = async (req = request, res = response, next) => {
       customError("Not found - email, username or password wrong", 404)
     );
 
+  const token = await generateJwt(uid);
+
   const logged = {
-    uid: req.user._id,
+    token,
+    uid,
     name,
     username,
     profilePicture,
