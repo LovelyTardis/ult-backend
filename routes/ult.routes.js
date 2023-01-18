@@ -23,7 +23,6 @@ const middlewares = {
   create: [
     check("user").isMongoId(),
     check("message", "Message is required").notEmpty(),
-    // TODO: if ult in body, add the created ult as a comment for the other ult
     validateFields,
   ],
 };
