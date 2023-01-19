@@ -8,8 +8,7 @@ export const validateUlt = async (req, res, next) => {
   try {
     const found = await FindById(UltModel, {
       id: ult,
-      populate: ["user"],
-      populate2: ["comments"],
+      populate: ["comments"],
     });
 
     if (!found) return next(customError("Not found - ult", 404));
