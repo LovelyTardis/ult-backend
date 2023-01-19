@@ -23,7 +23,6 @@ const middlewares = {
   ],
   create: [
     validateJwt,
-    check("user").isMongoId(),
     check("message", "Message is required").notEmpty(),
     validateFields,
   ],
