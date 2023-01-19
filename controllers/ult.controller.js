@@ -1,8 +1,19 @@
 import { request, response } from "express";
 
 import { UltModel, UserModel } from "../models/index.js";
-import { Create, PushToArray } from "../database/helpers/index.js";
+import { Create, FindAll, PushToArray } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
+
+export const getAllUlts = async (req = request, res = response) => {
+  const allUlts = await FindAll(UltModel, { limit: 10 });
+
+  return res.json({
+    code: 200,
+    data: {
+      ults: allUlts,
+    },
+  });
+};
 
 export const getUlt = async (req = request, res = response) => {
   return res.json({

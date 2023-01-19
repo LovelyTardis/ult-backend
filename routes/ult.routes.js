@@ -2,7 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 // CONTROLLERS
-import { getUlt, createUlt } from "../controllers/index.js";
+import { getUlt, getAllUlts, createUlt } from "../controllers/index.js";
 
 // MIDDLEWARES
 import {
@@ -29,6 +29,7 @@ const middlewares = {
 };
 
 ultRoutes.get("/:ult", middlewares.getUlt, getUlt);
+ultRoutes.get("/", getAllUlts);
 ultRoutes.post("/", middlewares.create, createUlt);
 ultRoutes.use(generalError);
 
