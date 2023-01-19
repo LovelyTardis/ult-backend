@@ -16,9 +16,7 @@ export const validateLoginCredentials = async (req, res, next) => {
       : await FindOne(UserModel, { filter: { username } });
 
     if (!found)
-      return next(
-        customError("Bad request - email, username or password wrong", 400)
-      );
+      return next(customError("Bad request - login credentials wrong", 400));
 
     req.user = found;
 
