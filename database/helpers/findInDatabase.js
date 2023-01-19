@@ -9,24 +9,20 @@
  * @return {Promise<[Number, Array<model>]>} [total entries, array of found documents].
  */
 export const FindAll = async (Model, data = { limit, from }) => {
-  const filter = { state: true };
   const { limit = 5, from = 0, populate = null, populate2 = null } = data;
 
-  return await Promise.all([
-    Model.countDocuments(),
-    populate2
-      ? Model.find(filter)
-          .populate(...populate)
-          .populate(...populate2)
-          .skip(from)
-          .limit(limit)
-      : populate
-      ? Model.find(filter)
-          .populate(...populate)
-          .skip(from)
-          .limit(limit)
-      : Model.find(filter).skip(from).limit(limit),
-  ]);
+  return populate2
+    ? Model.find()
+        .populate(...populate)
+        .populate(...populate2)
+        .skip(from)
+        .limit(limit)
+    : populate
+    ? Model.find()
+        .populate(...populate)
+        .skip(from)
+        .limit(limit)
+    : Model.find().skip(from).limit(limit);
 };
 
 /**
