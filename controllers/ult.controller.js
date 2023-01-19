@@ -12,10 +12,11 @@ export const getUlt = async (req = request, res = response) => {
 };
 
 export const createUlt = async (req = request, res = response, next) => {
-  const { user, message, ult = null } = req.body;
+  const { message, ult = null } = req.body;
+  const { user } = req;
 
   const dataToSave = {
-    user: user,
+    user,
     message,
     datetime: Date.now(),
     ult,
