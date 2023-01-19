@@ -8,7 +8,8 @@ import { customError } from "../../utils/customError.js";
 export const validateJwt = async (req = request, _, next) => {
   const token = req.header("user-token");
 
-  if (!token) return next(customError("Bad request - no token", 400));
+  if (!token)
+    return next(customError("Bad request - user-token header required", 400));
 
   try {
     const { uid: id } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
