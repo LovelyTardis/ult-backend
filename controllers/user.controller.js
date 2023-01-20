@@ -18,6 +18,7 @@ export const getUser = async (req = request, res = response) => {
       profilePicture: user.profilePicture,
       ults: user.ults,
       likedUlts: user.likedUlts,
+      biography: user.biography,
     },
   });
 };
@@ -39,8 +40,16 @@ export const createUser = async (req = request, res = response, next) => {
   try {
     const created = await Create(UserModel, dataToSave);
 
-    const { _id, name, username, profilePicture, email, ults, likedUlts } =
-      created;
+    const {
+      _id,
+      name,
+      username,
+      profilePicture,
+      email,
+      ults,
+      likedUlts,
+      biography,
+    } = created;
 
     const logged = {
       uid: _id,
@@ -50,6 +59,7 @@ export const createUser = async (req = request, res = response, next) => {
       email,
       ults,
       likedUlts,
+      biography,
     };
 
     res.status(201).json({
@@ -72,6 +82,7 @@ export const loginUser = async (req = request, res = response, next) => {
     password: hashedPassword,
     ults,
     likedUlts,
+    biography,
   } = req.user;
 
   const verified = passwordVerify(password, hashedPassword);
@@ -92,6 +103,7 @@ export const loginUser = async (req = request, res = response, next) => {
     email,
     ults,
     likedUlts,
+    biography,
   };
 
   res.json({
