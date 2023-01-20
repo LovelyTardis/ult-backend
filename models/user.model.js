@@ -20,6 +20,10 @@ const UserSchema = Schema({
     type: String,
     required: [true, "Email is required"],
   },
+  biography: {
+    type: String,
+    default: "",
+  },
   ults: {
     type: Array(Schema.Types.ObjectId),
     ref: "Ult",
