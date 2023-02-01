@@ -10,6 +10,7 @@ export default class Server {
     this.port = process.env.PORT || 8080;
 
     this.routesPath = {
+      tryConnection: "/",
       user: "/user",
       ult: "/ult",
     };
@@ -35,6 +36,7 @@ export default class Server {
   }
 
   routes() {
+    this.app.get(this.routesPath.tryConnection, (req, res) => res.status(200));
     this.app.use(this.routesPath.user, userRoutes);
     this.app.use(this.routesPath.ult, ultRoutes);
   }
