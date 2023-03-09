@@ -17,12 +17,14 @@ export const FindAll = async (Model, data = { limit, from }) => {
         .populate(...populate2)
         .skip(from)
         .limit(limit)
+        .sort({ _id: -1 })
     : populate
     ? Model.find()
         .populate(...populate)
         .skip(from)
         .limit(limit)
-    : Model.find().skip(from).limit(limit);
+        .sort({ _id: -1 })
+    : Model.find().skip(from).limit(limit).sort({ _id: -1 });
 };
 
 /**
