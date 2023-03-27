@@ -108,7 +108,7 @@ export const loginUser = async (req = request, res = response, next) => {
 
   res.json({
     code: 200,
-    error: true,
+    error: false,
     data: logged,
   });
 };
