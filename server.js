@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 
 import dbConnection from "./database/config.js";
 import { userRoutes, ultRoutes } from "./routes/index.js";
@@ -33,6 +34,7 @@ export default class Server {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(express.static(path.dirname("./public")));
   }
 
   routes() {
