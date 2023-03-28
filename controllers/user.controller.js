@@ -112,3 +112,36 @@ export const loginUser = async (req = request, res = response, next) => {
     data: logged,
   });
 };
+
+export const autoLogin = async (req = request, res = response, next) => {
+  const {
+    _id: uid,
+    name,
+    username,
+    profilePicture,
+    email,
+    ults,
+    likedUlts,
+    biography,
+  } = req.user;
+
+  const token = await generateJwt(uid);
+
+  const logged = {
+    token,
+    uid,
+    name,
+    username,
+    profilePicture,
+    email,
+    ults,
+    likedUlts,
+    biography,
+  };
+
+  res.json({
+    code: 200,
+    error: false,
+    data: logged,
+  });
+};
