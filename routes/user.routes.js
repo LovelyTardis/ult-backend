@@ -2,7 +2,12 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 // CONTROLLERS
-import { getUser, createUser, loginUser } from "../controllers/index.js";
+import {
+  getUser,
+  createUser,
+  loginUser,
+  autoLogin,
+} from "../controllers/index.js";
 
 // MIDDLEWARES
 import {
@@ -10,6 +15,7 @@ import {
   validateUserId,
   validateUsername,
   validateLoginCredentials,
+  validateJwt,
 } from "../middlewares/validators/index.js";
 import {
   checkEmailExists,
@@ -37,12 +43,14 @@ const middlewares = {
     validateFields,
   ],
   login: [validateLoginCredentials, validateFields],
+  autoLogin: [validateJwt, validateFields],
 };
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
 userRoutes.get("/id/:id", middlewares.getUserById, getUser);
 userRoutes.post("/", middlewares.create, createUser);
 userRoutes.post("/login", middlewares.login, loginUser);
+userRoutes.post("/autologin", middlewares.autoLogin, autoLogin);
 userRoutes.use(generalError);
 
 export default userRoutes;
