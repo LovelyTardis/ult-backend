@@ -28,9 +28,9 @@ const middlewares = {
   ],
 };
 
+ultRoutes.get("/all", getAllUlts);
 ultRoutes.get("/:ult", middlewares.getUlt, getUlt);
-ultRoutes.get("/", getAllUlts);
-ultRoutes.post("/", middlewares.create, createUlt);
+ultRoutes.post("/create", middlewares.create, createUlt);
 ultRoutes.use(generalError);
 
 export default ultRoutes;
