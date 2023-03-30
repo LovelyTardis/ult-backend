@@ -27,7 +27,7 @@ const userRoutes = Router();
 const middlewares = {
   getUser: [check("username").notEmpty(), validateUsername, validateFields],
   getUserById: [check("id").isMongoId(), validateUserId, validateFields],
-  create: [
+  register: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
     check("email").custom(checkEmailExists),
@@ -48,7 +48,7 @@ const middlewares = {
 
 userRoutes.get("/:username", middlewares.getUser, getUser);
 userRoutes.get("/id/:id", middlewares.getUserById, getUser);
-userRoutes.post("/", middlewares.create, createUser);
+userRoutes.post("/register", middlewares.register, createUser);
 userRoutes.post("/login", middlewares.login, loginUser);
 userRoutes.post("/autologin", middlewares.autoLogin, autoLogin);
 userRoutes.use(generalError);
