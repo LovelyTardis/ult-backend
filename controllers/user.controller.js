@@ -11,6 +11,7 @@ export const getUser = async (req = request, res = response) => {
 
   return res.json({
     code: 200,
+    error: false,
     data: {
       name: user.name,
       username: user.username,
@@ -40,31 +41,14 @@ export const createUser = async (req = request, res = response, next) => {
   try {
     const created = await Create(UserModel, dataToSave);
 
-    const {
-      _id,
-      name,
-      username,
-      profilePicture,
-      email,
-      ults,
-      likedUlts,
-      biography,
-    } = created;
+    const { _id } = created;
 
-    const logged = {
-      uid: _id,
-      name,
-      username,
-      profilePicture,
-      email,
-      ults,
-      likedUlts,
-      biography,
-    };
+    const token = await generateJwt(_id);
 
     res.status(201).json({
       code: 201,
-      data: logged,
+      error: false,
+      data: { token },
     });
   } catch (err) {
     next(customError(err));
