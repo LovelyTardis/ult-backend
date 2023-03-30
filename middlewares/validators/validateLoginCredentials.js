@@ -12,8 +12,16 @@ export const validateLoginCredentials = async (req, res, next) => {
 
   try {
     const found = email
-      ? await FindOne(UserModel, { filter: { email }, populate: ["ults"] })
-      : await FindOne(UserModel, { filter: { username }, populate: ["ults"] });
+      ? await FindOne(UserModel, {
+          filter: { email },
+          populate: ["ults"],
+          populate2: ["likedUlts"],
+        })
+      : await FindOne(UserModel, {
+          filter: { username },
+          populate: ["ults"],
+          populate2: ["likedUlts"],
+        });
 
     if (!found)
       return next(customError("Bad request - login credentials wrong", 400));
