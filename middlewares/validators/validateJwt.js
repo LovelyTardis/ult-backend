@@ -14,7 +14,7 @@ export const validateJwt = async (req = request, _, next) => {
   try {
     const { uid: id } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
 
-    const found = await FindById(UserModel, { id });
+    const found = await FindById(UserModel, { id, populate: ["ults"] });
 
     if (!found)
       return next(customError("Bad request - user not in the database", 400));
