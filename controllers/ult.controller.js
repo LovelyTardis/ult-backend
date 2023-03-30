@@ -9,6 +9,7 @@ export const getAllUlts = async (req = request, res = response) => {
 
   return res.json({
     code: 200,
+    error: false,
     data: {
       ults: allUlts,
     },
@@ -16,9 +17,12 @@ export const getAllUlts = async (req = request, res = response) => {
 };
 
 export const getUlt = async (req = request, res = response) => {
+  const { _id, message, datetime, user, ult, likes, comments } = req.ult;
+
   return res.json({
     code: 200,
-    data: req.ult,
+    error: false,
+    data: { _id, message, datetime, user, ult, likes, comments },
   });
 };
 
@@ -44,6 +48,7 @@ export const createUlt = async (req = request, res = response, next) => {
 
     res.status(201).json({
       code: 201,
+      error: false,
       data: "Created - ult",
     });
   } catch (err) {
