@@ -3,7 +3,6 @@ import cors from "cors";
 import path from "path";
 
 import dbConnection from "./database/config.js";
-import { userRoutes, ultRoutes } from "./routes/index.js";
 
 export default class Server {
   constructor() {
@@ -39,7 +38,9 @@ export default class Server {
 
   routes() {
     this.app.get(this.routesPath.try, (req, res) => res.sendStatus(200));
-    this.app.use(this.routesPath.user, userRoutes);
-    this.app.use(this.routesPath.ult, ultRoutes);
+    import("./routes/index.js").then(({ userRoutes, ultRoutes }) => {
+      this.app.use(this.routesPath.user, userRoutes);
+      this.app.use(this.routesPath.ult, ultRoutes);
+    });
   }
 }
