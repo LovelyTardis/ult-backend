@@ -27,3 +27,14 @@ export const Update = async (Model, data) => {
 export const PushToArray = async (Model, idToUpdate, dataToPush) => {
   await Model.updateOne({ _id: idToUpdate }, { $push: dataToPush });
 };
+
+/**
+ * Deletes something from an array.
+ *
+ * @param {model} Model mongoose model.
+ * @param {String} idToUpdate mongoId to update
+ * @param {object} dataToDelete data to be deleted in the array
+ */
+export const DeleteInArray = async (Model, idToUpdate, dataToDelete) => {
+  await Model.updateOne({ _id: idToUpdate }, { $pull: dataToDelete });
+};
