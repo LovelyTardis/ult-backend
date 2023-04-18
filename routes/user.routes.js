@@ -25,8 +25,12 @@ import { generalError } from "../middlewares/errors.js";
 
 const userRoutes = Router();
 const middlewares = {
-  getUser: [check("username").notEmpty(), validateUsername, validateFields],
-  getUserById: [check("id").isMongoId(), validateUserId, validateFields],
+  getByUsername: [
+    check("username").notEmpty(),
+    validateUsername,
+    validateFields,
+  ],
+  getById: [check("id").isMongoId(), validateUserId, validateFields],
   register: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
@@ -46,8 +50,8 @@ const middlewares = {
   autoLogin: [validateJwt, validateFields],
 };
 
-userRoutes.get("/:username", middlewares.getUser, getUser);
-userRoutes.get("/id/:id", middlewares.getUserById, getUser);
+userRoutes.get("/:username", middlewares.getByUsername, getUser);
+userRoutes.get("/id/:id", middlewares.getById, getUser);
 userRoutes.post("/register", middlewares.register, createUser);
 userRoutes.post("/login", middlewares.login, loginUser);
 userRoutes.post("/autologin", middlewares.autoLogin, autoLogin);
