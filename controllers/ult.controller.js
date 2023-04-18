@@ -1,7 +1,13 @@
 import { request, response } from "express";
 
 import { UltModel, UserModel } from "../models/index.js";
-import { Create, FindAll, PushToArray } from "../database/helpers/index.js";
+import {
+  Create,
+  FindAll,
+  Update,
+  PushToArray,
+  DeleteInArray,
+} from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
 export const getAllUlts = async (req = request, res = response) => {
@@ -50,6 +56,33 @@ export const createUlt = async (req = request, res = response, next) => {
       code: 201,
       error: false,
       data: "Created - ult",
+    });
+  } catch (err) {
+    return next(customError(err));
+  }
+};
+
+export const likeUlt = async (req = request, res = response, next) => {
+  const { _id: userId } = req.user;
+  const { _id: ultId, likes } = req.ult;
+  const { like } = req.body;
+
+  try {
+    const updatedUlt = await Update(UltModel, {
+      id: ultId,
+      updatedData: {
+        likes: likes + (like ? 1 : likes > 0 && -1),
+      },
+    });
+
+    like
+      ? await PushToArray(UserModel, userId, { likedUlts: updatedUlt })
+      : await DeleteInArray(UserModel, userId, { likedUlts: ultId });
+
+    res.json({
+      code: 200,
+      error: false,
+      data: like ? "Ult liked successfully" : "Ult disliked successfully",
     });
   } catch (err) {
     return next(customError(err));
