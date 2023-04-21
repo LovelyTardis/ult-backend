@@ -9,7 +9,7 @@
  * @return {Promise<[Number, Array<model>]>} [total entries, array of found documents].
  */
 export const FindAll = async (Model, data = { limit, from }) => {
-  const { limit = 5, from = 0, populate = null, populate2 = null } = data;
+  const { limit = 0, from = 0, populate = null, populate2 = null } = data;
 
   return populate2
     ? Model.find()
