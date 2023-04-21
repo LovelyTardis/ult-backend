@@ -11,7 +11,8 @@ import {
 import { customError } from "../utils/customError.js";
 
 export const getAllUlts = async (req = request, res = response) => {
-  const allUlts = await FindAll(UltModel, { limit: 10 });
+  const { limit, from } = req.body;
+  const allUlts = await FindAll(UltModel, { limit, from });
 
   return res.json({
     code: 200,
