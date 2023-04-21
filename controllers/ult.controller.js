@@ -7,19 +7,31 @@ import {
   Update,
   PushToArray,
   DeleteInArray,
+  Find,
 } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
 export const getAllUlts = async (req = request, res = response) => {
   const { limit, from } = req.body;
-  const allUlts = await FindAll(UltModel, { limit, from });
+  let ults = await FindAll(UltModel, { limit, from, populate: ["user"] });
+
+  ults = ults.map(({ message, datetime, ult, likes, comments, user }) => {
+    const { _id, name, username, profilePicture } = user;
+
+    return {
+      message,
+      datetime,
+      ult,
+      likes,
+      comments,
+      user: { _id, name, username, profilePicture },
+    };
+  });
 
   return res.json({
     code: 200,
     error: false,
-    data: {
-      ults: allUlts,
-    },
+    data: ults,
   });
 };
 
