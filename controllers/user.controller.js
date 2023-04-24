@@ -7,20 +7,23 @@ import { Create, FindById, FindOne } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
 export const getUser = async (req = request, res = response) => {
-  const { user } = req;
+  const { name, username, email, profilePicture, ults, likedUlts, biography } =
+    req.user;
+
+  const data = {
+    name,
+    username,
+    email,
+    profilePicture,
+    ults,
+    likedUlts,
+    biography,
+  };
 
   return res.json({
     code: 200,
     error: false,
-    data: {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      profilePicture: user.profilePicture,
-      ults: user.ults,
-      likedUlts: user.likedUlts,
-      biography: user.biography,
-    },
+    data,
   });
 };
 
@@ -124,6 +127,7 @@ export const createUser = async (req = request, res = response, next) => {
       data: { token },
     });
   } catch (err) {
+    console.log(err);
     next(customError(err));
   }
 };
@@ -149,25 +153,30 @@ export const loginUser = async (req = request, res = response, next) => {
       customError("Not found - email, username or password wrong", 404)
     );
 
-  const token = await generateJwt(uid);
+  try {
+    const token = await generateJwt(uid);
 
-  const logged = {
-    token,
-    uid,
-    name,
-    username,
-    profilePicture,
-    email,
-    ults,
-    likedUlts,
-    biography,
-  };
+    const data = {
+      token,
+      uid,
+      name,
+      username,
+      profilePicture,
+      email,
+      ults,
+      likedUlts,
+      biography,
+    };
 
-  res.json({
-    code: 200,
-    error: false,
-    data: logged,
-  });
+    return res.json({
+      code: 200,
+      error: false,
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(customError(err));
+  }
 };
 
 export const autoLogin = async (req = request, res = response, next) => {
@@ -182,23 +191,28 @@ export const autoLogin = async (req = request, res = response, next) => {
     biography,
   } = req.user;
 
-  const token = await generateJwt(uid);
+  try {
+    const token = await generateJwt(uid);
 
-  const logged = {
-    token,
-    uid,
-    name,
-    username,
-    profilePicture,
-    email,
-    ults,
-    likedUlts,
-    biography,
-  };
+    const data = {
+      token,
+      uid,
+      name,
+      username,
+      profilePicture,
+      email,
+      ults,
+      likedUlts,
+      biography,
+    };
 
-  res.json({
-    code: 200,
-    error: false,
-    data: logged,
-  });
+    return res.json({
+      code: 200,
+      error: false,
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(customError(err));
+  }
 };
