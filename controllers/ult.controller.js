@@ -7,47 +7,58 @@ import {
   Update,
   PushToArray,
   DeleteInArray,
-  Find,
 } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
-export const getAllUlts = async (req = request, res = response) => {
+export const getAllUlts = async (req = request, res = response, next) => {
   const { limit, from } = req.body;
-  let ults = await FindAll(UltModel, { limit, from, populate: ["user"] });
+  let data;
 
-  ults = ults.map(({ message, datetime, ult, likes, comments, user }) => {
-    const { _id, name, username, profilePicture } = user;
+  try {
+    const ults = await FindAll(UltModel, { limit, from, populate: ["user"] });
 
-    return {
-      message,
-      datetime,
-      ult,
-      likes,
-      comments,
-      user: { _id, name, username, profilePicture },
-    };
-  });
+    data = ults.map(
+      ({ _id, message, datetime, ult, likes, comments, user }) => {
+        const { _id: userId, name, username, profilePicture } = user;
 
-  return res.json({
-    code: 200,
-    error: false,
-    data: ults,
-  });
+        return {
+          _id,
+          message,
+          datetime,
+          ult,
+          likes,
+          comments,
+          user: { _id: userId, name, username, profilePicture },
+        };
+      }
+    );
+
+    return res.json({
+      code: 200,
+      error: false,
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return next(customError(err));
+  }
 };
 
 export const getUlt = async (req = request, res = response) => {
   const { _id, message, datetime, user, ult, likes, comments } = req.ult;
 
+  const data = { _id, message, datetime, user, ult, likes, comments };
+
   return res.json({
     code: 200,
     error: false,
-    data: { _id, message, datetime, user, ult, likes, comments },
+    data,
   });
 };
 
 export const createUlt = async (req = request, res = response, next) => {
-  const { message, ult = null } = req.body;
   const { user } = req;
+  const { message, ult = null } = req.body;
 
   const dataToSave = {
     user,
@@ -71,6 +82,7 @@ export const createUlt = async (req = request, res = response, next) => {
       data: "Created - ult",
     });
   } catch (err) {
+    console.log(err);
     return next(customError(err));
   }
 };
@@ -98,6 +110,7 @@ export const likeUlt = async (req = request, res = response, next) => {
       data: like ? "Ult liked successfully" : "Ult disliked successfully",
     });
   } catch (err) {
+    console.log(err);
     return next(customError(err));
   }
 };
