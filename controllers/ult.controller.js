@@ -7,6 +7,7 @@ import {
   Update,
   PushToArray,
   DeleteInArray,
+  Delete,
 } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
@@ -113,4 +114,12 @@ export const likeUlt = async (req = request, res = response, next) => {
     console.log(err);
     return next(customError(err));
   }
+};
+
+export const deleteUlt = async (req = request, res = response, next) => {
+  return res.statusCode(501).json({
+    code: 501,
+    error: false,
+    data: "Not implemented",
+  });
 };

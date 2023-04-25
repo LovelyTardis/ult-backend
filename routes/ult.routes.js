@@ -6,6 +6,7 @@ import {
   getUlt,
   getAllUlts,
   createUlt,
+  deleteUlt,
   likeUlt,
 } from "../controllers/index.js";
 
@@ -39,12 +40,19 @@ const middlewares = {
     validateUlt,
     validateFields,
   ],
+  delete: [
+    check("ult", "Bad request - ult is requiered").notEmpty(),
+    check("ult", "Bad request - not a mongo id").isMongoId(),
+    validateUlt,
+    validateFields,
+  ],
 };
 
 ultRoutes.get("/all", getAllUlts);
 ultRoutes.get("/:ult", middlewares.get, getUlt);
 ultRoutes.post("/create", middlewares.create, createUlt);
 ultRoutes.put("/like/:ult", middlewares.like, likeUlt);
+ultRoutes.delete("/delete/:ult", middlewares.delete, deleteUlt);
 ultRoutes.use(generalError);
 
 export default ultRoutes;
