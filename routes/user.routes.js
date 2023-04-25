@@ -4,7 +4,6 @@ import { check } from "express-validator";
 // CONTROLLERS
 import {
   getUser,
-  getUlts,
   createUser,
   loginUser,
   autoLogin,
@@ -32,10 +31,6 @@ const middlewares = {
     validateFields,
   ],
   getById: [check("id").isMongoId(), validateUserId, validateFields],
-  getUlts: [
-    check("username", "Bad request - username is required").notEmpty(),
-    validateFields,
-  ],
   register: [
     check("email", "Bad request - no email in body").notEmpty(),
     check("email", "Bad request - not a valid email").isEmail(),
@@ -55,7 +50,6 @@ const middlewares = {
   autoLogin: [validateJwt, validateFields],
 };
 
-userRoutes.get("/ults/:username", middlewares.getUlts, getUlts);
 userRoutes.get("/id/:id", middlewares.getById, getUser);
 userRoutes.get("/:username", middlewares.getByUsername, getUser);
 userRoutes.post("/register", middlewares.register, createUser);
