@@ -1,93 +1,95 @@
 import { request, response } from "express";
 
 import { UltModel, UserModel } from "../models/index.js";
-
 import { passwordHash, passwordVerify, generateJwt } from "../helpers/index.js";
 import { Create, FindById, FindOne } from "../database/helpers/index.js";
 import { customError } from "../utils/customError.js";
 
-export const getUser = async (req = request, res = response) => {
-  const { name, username, email, profilePicture, ults, likedUlts, biography } =
-    req.user;
-
-  const data = {
-    name,
-    username,
-    email,
-    profilePicture,
-    ults,
-    likedUlts,
-    biography,
-  };
-
-  return res.json({
-    code: 200,
-    error: false,
-    data,
-  });
-};
-
-export const getUlts = async (req = request, res = response, next) => {
+export const getUser = async (req = request, res = response, next) => {
   const { username: paramUsername } = req.params;
-  const data = {};
 
   try {
     // GET USER INFORMATION FROM DATABASE
-    const { name, username, profilePicture, ults } = await FindOne(UserModel, {
+    const {
+      _id,
+      name,
+      username,
+      email,
+      profilePicture,
+      ults: oldUlts,
+    } = await FindOne(UserModel, {
       filter: { username: paramUsername },
       populate: ["ults"],
     });
 
-    // SET NAME, USERNAME AND PROFILE PICTURE
-    data.name = name;
-    data.username = username;
-    data.profilePicture = profilePicture;
-
     // A MAP OF ULTS WITH A PROMISE.ALL IN ORDER TO SET data.ults VALUE
-    data.ults = await Promise.all(
-      ults.map(async ({ _id, ult, comments, message, datetime, likes }) => {
-        let parentUlt = null;
-        let newComments = [];
-
-        // IF AN ULT HAS A PARENT ULT
-        if (ult) {
-          const found = await FindById(UltModel, { id: ult.toString() });
-          const { _id, name, username, profilePicture } = await FindById(
-            UserModel,
-            {
-              id: found.user.toString(),
-            }
-          );
-
-          parentUlt = found.toObject();
-          parentUlt.user = { _id, name, username, profilePicture };
-        }
-
-        // IF THE ULT HAS COMMENTS
-        if (comments.length > 0) {
-          // A MAP OF COMMENTS WITH A PROMISE.ALL IN ORDER TO SET newComments VARIABLE
-          newComments = await Promise.all(
-            comments.map(
-              async (comment) =>
-                // RETURN DESTRUCTURED DATA THAT COMES FROM THE DATABASE
-                ({ _id, ult, comments, message, datetime, likes } =
-                  await FindById(UltModel, {
-                    id: comment.toString(),
-                  }))
-            )
-          );
-        }
-
-        return {
+    const ults = await Promise.all(
+      oldUlts.map(
+        async ({
           _id,
+          ult: parentUlt,
+          comments: oldComments,
           message,
           datetime,
           likes,
-          ult: parentUlt,
-          comments: newComments,
-        };
-      })
+        }) => {
+          let ult = null;
+          let comments = [];
+
+          console.log(message);
+          if (parentUlt) console.log(parentUlt);
+
+          // IF AN ULT HAS A PARENT ULT
+          if (parentUlt) {
+            ult = await FindById(UltModel, { id: parentUlt.toString() });
+
+            const { _id, name, username, profilePicture } = await FindById(
+              UserModel,
+              {
+                id: ult.user.toString(),
+              }
+            );
+
+            ult.user = { _id, name, username, profilePicture };
+          }
+
+          // IF THE ULT HAS COMMENTS
+          if (oldComments.length > 0) {
+            // A MAP OF COMMENTS WITH A PROMISE.ALL IN ORDER TO SET newComments VARIABLE
+            comments = await Promise.all(
+              oldComments.map(async (comment) => {
+                // RETURN DESTRUCTURED DATA THAT COMES FROM THE DATABASE
+                const { _id, message, datetime, likes, ult, comments } =
+                  await FindById(UltModel, {
+                    id: comment.toString(),
+                  });
+
+                return { _id, message, datetime, likes, ult, comments };
+              })
+            );
+          }
+
+          return {
+            _id,
+            message,
+            datetime,
+            likes,
+            ult,
+            comments,
+          };
+        }
+      )
     );
+
+    // SET CUSTOM DATA OBJECT TO SEND
+    const data = {
+      _id,
+      name,
+      username,
+      email,
+      profilePicture,
+      ults,
+    };
 
     return res.json({
       code: 200,
